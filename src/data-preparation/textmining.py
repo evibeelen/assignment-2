@@ -22,4 +22,4 @@ os.makedirs('../../gen/data-preparation/output/', exist_ok=True)
 
 data.to_csv('../../gen/data-preparation/output/dataset.csv', index = False)
 
-print('done.')
+print('done!')
