@@ -41,4 +41,4 @@ for i in con:
 
     outfile.write(obj.get('id_str')+'\t'+obj.get('created_at')+'\t'+text+'\t'+str(school)+'\t'+str(contact)+'\t'+str(verpleeg)+'\t'+str(horeca)+'\t'+str(evenement)+'\n')
 
-print('done.')
+print('done!')
