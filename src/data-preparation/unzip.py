@@ -3,7 +3,7 @@ import os
 import time
 import datetime
 
-fn = '../../data/fortnite-rawdata.zip'
+fn = '../../data/rawdata.zip'
 extract_dir = '../../gen/data-preparation/temp'
 
 os.makedirs(extract_dir, exist_ok=True)
