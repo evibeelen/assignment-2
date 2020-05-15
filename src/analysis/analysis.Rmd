@@ -10,7 +10,7 @@ library(data.table)
 library(ggplot2)
 
 # read final data
-dt <- fread('../../gen/analysis/temp/preclean.csv')
+dt <- fread('../../gen/data-preparation/output/dataset.csv')
 ```
 
 ## Some rudimentary analysis in Markdown
@@ -38,12 +38,7 @@ Hospitality<-sum(dt$Hospitality, na.rm = TRUE)
 Event<- sum(dt$Events, na.rm = TRUE)
 General<-sum(dt$General, na.rm = TRUE)
 
-cat("Number of tweets about the School Measures is", Schools, "\n")
-cat("Number of tweets about the contact-based profession Measures is", Contact, "\n")
-cat("Number of tweets about the Nursing homes Measures is", Nursing, "\n")
-cat("Number of tweets about the Hospitality Measures is", Hospitality, "\n")
-cat("Number of tweets about the Event Measures is", Event, "\n")
-cat("Number of tweets generally about the press conference is", General, "\n")
+cat("Number of tweets about the School Measures is", Schools, "\n","Number of tweets about the contact-based profession Measures is", Contact, "\n", "Number of tweets about the Nursing homes Measures is", Nursing, "\n","Number of tweets about the Hospitality Measures is", Hospitality, "\n", "Number of tweets about the Event Measures is", Event, "\n", "Number of tweets generally about the press conference is", General)
 ```
 
 ```{r}
