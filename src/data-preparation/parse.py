@@ -11,6 +11,7 @@ outfile.write('id\tcreated_at\ttext\n')
 for i in con:
     if ('{' not in i):
         continue
+
     obj=json.loads(i)
     try:
         text = obj.get("retweeted_status").get("extended_tweet").get("full_text")
@@ -24,7 +25,7 @@ for i in con:
                 text = obj.get("text" )
     text = text.replace('\t', ' ').replace('\n', ' ').replace(';', ' ')
 
-
     outfile.write(obj.get('id_str')+'\t'+obj.get('created_at')+'\t'+text+'\n')
+
 
 print('done')

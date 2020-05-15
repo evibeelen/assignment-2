@@ -4,6 +4,7 @@ translator = Translator()
 import string
 printable = set(string.printable)
 import os
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 data = pd.read_csv('../../gen/data-preparation/temp/parsed-data.csv', sep = '\t')
 data.head()
@@ -48,6 +49,12 @@ for i, j in data.iterrows():
     text_en=translator.translate(text_cleaned, dest="en").text
 
     ## VADER
+    analyser = SentimentIntensityAnalyzer()
+    out = analyser.polarity_scores(text)
+    data.loc[i, 'Negative'] = out['neg']
+    data.loc[i, 'Neutral'] = out['neu']
+    data.loc[i, 'Positive'] = out['pos']
+    data.loc[i, 'Compound'] = out['compound']
 
 data.head()
 
