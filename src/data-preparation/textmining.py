@@ -16,32 +16,35 @@ for i, j in data.iterrows():
     ## translation
     text_cleaned="".join(filter(lambda x: x in printable, text))
     text_nl=translator.translate(text_cleaned, dest="nl").text
-    
+
     #subject indication
-    school=0
-    contact=0
-    nursing=0
-    hospitality=0
-    event=0
-    general=0
+    school=False
+    contact=False
+    nursing=False
+    hospitality=False
+    event=False
+    general=False
+
     if "school" in text.lower() or "onderwijs" in text.lower() or "scholen" in text.lower():
-        school=1
+        school=True
     if "kapper" in text.lower() or "contactberoep" in text.lower():
-        contact=1
+        contact=True
     if "verpleeghuis" in text.lower() or "verpleeghuizen" in text.lower():
-        nursing=1
+        nursing=True
     if "horeca" in text.lower() or "restaurant" in text.lower() or "terras" in text.lower() or "kroeg" in text.lower() or "bar" in text.lower():
-        hospitality=1
+        hospitality=True
     if "evenement" in text.lower() or "festival" in text.lower():
-        event=1
-    if (school+contact+nursing+hospitality+event) == 0:
-        general+=1
+        event=True
+    if school== False and contact== False and nursing== False and hospitality == False and event== False:
+        general=True
     data.loc[i, 'Schools'] = school
     data.loc[i, 'Contact-Based Professions'] = contact
     data.loc[i, 'Nursing homes'] = nursing
     data.loc[i, 'Hospitality'] = hospitality
     data.loc[i, 'Events'] = event
     data.loc[i, 'General'] = general
+
+    ## Translate voor sentiment Analysis
     text_en=translator.translate(text_cleaned, dest="en").text
 
     ## VADER
