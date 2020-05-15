@@ -10,7 +10,7 @@ library(data.table)
 library(ggplot2)
 
 # read final data
-dt <- fread('../../gen/analysis/temp/preclean.csv')
+dt <- fread('../../gen/data-preparation/output/dataset.csv')
 ```
 
 ## Some rudimentary analysis in Markdown
@@ -25,18 +25,30 @@ You can also **knit** the document from the command line, see the example in the
 ### Summary statistics
 
 ```{r}
-summary(dt)
+#summary(dt$horeca)
 ```
 
-### Plots
+### Number of tweets per subject
 
 ```{r}
-hist(dt$polarity)
+Schools<-sum(dt$Schools, na.rm = TRUE)
+Contact<-sum(dt$`Contact-Based Professions`, na.rm = TRUE)
+Nursing <- sum(dt$`Nursing homes`, na.rm = TRUE)
+Hospitality<-sum(dt$Hospitality, na.rm = TRUE)
+Event<- sum(dt$Events, na.rm = TRUE)
+General<-sum(dt$General, na.rm = TRUE)
+
+cat("Number of tweets about the School Measures is", Schools, "\n","Number of tweets about the contact-based profession Measures is", Contact, "\n", "Number of tweets about the Nursing homes Measures is", Nursing, "\n","Number of tweets about the Hospitality Measures is", Hospitality, "\n", "Number of tweets about the Event Measures is", Event, "\n", "Number of tweets generally about the press conference is", General)
+
+
 ```
 
 ```{r}
 # Overlaid histograms
-ggplot(dt, aes(x=polarity, color=retweet)) +
-  geom_histogram(fill="white", alpha=0.5, position="identity") + ggtitle('Some histogram')
+df <- data.frame(Subject=c("Schools", "Contact-Based Professions", "Nursing Homes", "Hospitality", "Events", "General"),
+                Frequency=c(Schools, Contact, Nursing,Hospitality,Event,General))
+
+ggplot(data=df, aes(x=Subject, y=Frequency)) +
+  geom_bar(stat="identity")
 ```
 
