@@ -8,9 +8,11 @@ outfile = open('../../gen/data-preparation/temp/parsed-data.csv', 'w', encoding 
 
 outfile.write('id\tcreated_at\ttext\n')
 
+
 for i in con:
     if ('{' not in i):
         continue
+
 
     obj=json.loads(i)
     try:
