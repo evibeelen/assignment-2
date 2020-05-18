@@ -1,5 +1,5 @@
 ---
-title: "Analysis"
+title: "Analysis of the Tweets per Subject"
 output: html_document
 ---
 
@@ -25,7 +25,7 @@ You can also **knit** the document from the command line, see the example in the
 ### Summary statistics
 
 ```{r}
-#summary(dt$horeca)
+head(dt$Schools)
 ```
 
 ### Number of tweets per subject
@@ -38,15 +38,105 @@ Hospitality<-sum(dt$Hospitality, na.rm = TRUE)
 Event<- sum(dt$Events, na.rm = TRUE)
 General<-sum(dt$General, na.rm = TRUE)
 
-cat("Number of tweets about the School Measures is", Schools, "\n","Number of tweets about the contact-based profession Measures is", Contact, "\n", "Number of tweets about the Nursing homes Measures is", Nursing, "\n","Number of tweets about the Hospitality Measures is", Hospitality, "\n", "Number of tweets about the Event Measures is", Event, "\n", "Number of tweets generally about the press conference is", General)
-```
-
-```{r}
-# Overlaid histograms
 df <- data.frame(Subject=c("Schools", "Contact-Based Professions", "Nursing Homes", "Hospitality", "Events", "General"),
                 Frequency=c(Schools, Contact, Nursing,Hospitality,Event,General))
+
+df <- data.frame(Subject=c("Schools", "Contact-Based Professions", "Nursing Homes", "Hospitality", "Events", "General"),
+                Frequency=c(Schools, Contact, Nursing,Hospitality,Event,General))
+```
+
+### Graph of number of tweets per subject
+```{r}
+
 
 ggplot(data=df, aes(x=Subject, y=Frequency)) +
   geom_bar(stat="identity")
 ```
 
+### Determining average sentiment per subject
+```{r}
+# calculating the average per subject and assigning to value to variable
+Neg.schools <- by(dt$Negative, dt$Schools, mean)
+neu.schools <- by(dt$Neutral, dt$Schools, mean)
+pos.schools <- by(dt$Positive, dt$Schools, mean)
+comp.schools <- by(dt$Compound, dt$Schools, mean)
+for (value in Neg.schools){Negative.Schools<-value}
+for (value in neu.schools){Neutral.Schools<-value}
+for (value in pos.schools){Postive.Schools<-value}
+for (value in comp.schools){Compound.Schools<-value}
+
+Neg.contact <- by(dt$Negative, dt$`Contact-Based Professions`, mean)
+neu.contact <- by(dt$Neutral, dt$`Contact-Based Professions`, mean)
+pos.contact <- by(dt$Positive, dt$`Contact-Based Professions`, mean)
+comp.contact <- by(dt$Compound, dt$`Contact-Based Professions`, mean)
+for (value in Neg.contact){Negative.contact<-value}
+for (value in neu.contact){Neutral.contact<-value}
+for (value in pos.contact){Postive.contact<-value}
+for (value in comp.contact){Compound.contact<-value}
+
+Neg.nursing <- by(dt$Negative, dt$`Nursing homes`, mean)
+neu.nursing <- by(dt$Neutral, dt$`Nursing homes`, mean)
+pos.nursing <- by(dt$Positive, dt$`Nursing homes`, mean)
+comp.nursing <- by(dt$Compound, dt$`Nursing homes`, mean)
+for (value in Neg.nursing){Negative.nursing<-value}
+for (value in neu.nursing){Neutral.nursing<-value}
+for (value in pos.nursing){Postive.nursing<-value}
+for (value in comp.nursing){Compound.nursing<-value}
+
+Neg.Hospitality <- by(dt$Negative, dt$Hospitality, mean)
+neu.Hospitality <- by(dt$Neutral, dt$Hospitality, mean)
+pos.Hospitality <- by(dt$Positive, dt$Hospitality, mean)
+comp.Hospitality <- by(dt$Compound, dt$Hospitality, mean)
+for (value in Neg.Hospitality){Negative.Hospitality<-value}
+for (value in neu.Hospitality){Neutral.Hospitality<-value}
+for (value in pos.Hospitality){Postive.Hospitality<-value}
+for (value in comp.Hospitality){Compound.Hospitality<-value}
+
+Neg.Event <- by(dt$Negative, dt$Events, mean)
+neu.Event <- by(dt$Neutral, dt$Event, mean)
+pos.Event <- by(dt$Positive, dt$Event, mean)
+comp.Event <- by(dt$Compound, dt$Event, mean)
+for (value in Neg.Event){Negative.Event<-value}
+for (value in neu.Event){Neutral.Event<-value}
+for (value in pos.Event){Postive.Event<-value}
+for (value in comp.Event){Compound.Event<-value}
+
+#creating data frames for each sentiment component
+
+Negative<-data.frame(Subject=c("Schools", "Contact-Based Professions", "Nursing Homes", "Hospitality", "Events"),
+                Negativity=c(Negative.Schools, Negative.contact, Negative.nursing,Negative.Hospitality,Negative.Event))
+
+print(Negative)
+
+Positive<-data.frame(Subject=c("Schools", "Contact-Based Professions", "Nursing Homes", "Hospitality", "Events"),
+                Positivity=c(Postive.Schools, Postive.contact, Postive.nursing,Postive.Hospitality,Postive.Event))
+
+print(Positive)
+
+Neutral<-data.frame(Subject=c("Schools", "Contact-Based Professions", "Nursing Homes", "Hospitality", "Events"),
+                Neutrality=c(Neutral.Schools, Neutral.contact, Neutral.nursing,Neutral.Hospitality,Neutral.Event))
+
+print(Neutral)
+
+Compound<-data.frame(Subject=c("Schools", "Contact-Based Professions", "Nursing Homes", "Hospitality", "Events"),
+                Compound=c(Compound.Schools, Compound.contact, Compound.nursing,Compound.Hospitality,Compound.Event))
+
+print(Compound)
+```
+
+### Graphing sentiment per subject
+```{r}
+# Overlaid histograms
+
+ggplot(data=Negative, aes(x=Subject, y=Negativity)) +
+  geom_bar(stat="identity")
+
+ggplot(data=Positive, aes(x=Subject, y=Positivity)) +
+  geom_bar(stat="identity")
+
+ggplot(data=Neutral, aes(x=Subject, y=Neutrality)) +
+  geom_bar(stat="identity")
+
+ggplot(data=Compound, aes(x=Subject, y=Compound)) +
+  geom_bar(stat="identity")
+```
