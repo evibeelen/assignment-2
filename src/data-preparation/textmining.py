@@ -50,7 +50,7 @@ for i, j in data.iterrows():
 
     ## VADER
     analyser = SentimentIntensityAnalyzer()
-    out = analyser.polarity_scores(text)
+    out = analyser.polarity_scores(text_en)
     data.loc[i, 'Negative'] = out['neg']
     data.loc[i, 'Neutral'] = out['neu']
     data.loc[i, 'Positive'] = out['pos']
