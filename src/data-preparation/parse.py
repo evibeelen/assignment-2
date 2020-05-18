@@ -40,7 +40,7 @@ for i in con:
     else:
         continue
 
-    if counter >50:
-        break
+    #if counter >50:
+        #break
 
 print('done')
