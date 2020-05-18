@@ -8,18 +8,19 @@ outfile = open('../../gen/data-preparation/temp/parsed-data.csv', 'w', encoding 
 
 outfile.write('id\tcreated_at\ttext\n')
 
+counter=0
 
 for i in con:
     if ('{' not in i):
         continue
 
-
+    counter+=1
     obj=json.loads(i)
     try:
-        text = obj.get("retweeted_status").get("extended_tweet").get("full_text")
+        text = obj.get("extended_tweet").get("full_text")
     except:
         try:
-            text = obj.get("extended_tweet").get("full_text")
+            text = obj.get("retweeted_status").get("extended_tweet").get("full_text")
         except:
             try:
                 text = obj.get("quoted_status").get("extended_tweet").get("full_text")
@@ -29,5 +30,6 @@ for i in con:
 
     outfile.write(obj.get('id_str')+'\t'+obj.get('created_at')+'\t'+text+'\n')
 
-
+    if counter >50:
+        break
 print('done')
