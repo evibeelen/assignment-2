@@ -5,10 +5,10 @@
 
 prep: ../../gen/data-preparation/output/dataset.csv
 
-../../data/fortnite-rawdata.zip: download.py
+../../data/rawdata.zip: download.py
 	python download.py
 
-../../gen/data-preparation/temp/unzipping.log: unzip.py ../../data/fortnite-rawdata.zip
+../../gen/data-preparation/temp/unzipping.log: unzip.py ../../data/rawdata.zip
 	python unzip.py
 
 ../../gen/data-preparation/temp/parsed-data.csv: parse.py ../../gen/data-preparation/temp/unzipping.log
