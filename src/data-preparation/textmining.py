@@ -50,12 +50,12 @@ for i, j in data.iterrows():
     data.loc[i, 'Sports'] = sports
 
     ## Translate voor sentiment Analysis
+    text_cleaned="".join(filter(lambda x: x in printable, text))
     try:
-        text_cleaned="".join(filter(lambda x: x in printable, text))
         text_en=translator.translate(text_cleaned, dest="en").text
     except:
         try:
-            text=TextBlob(text)
+            text=TextBlob(text_cleaned)
             text_en=text.translate(to='en').text
         except:
             data.loc[i, 'Negative'] = "NA"
