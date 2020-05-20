@@ -1,12 +1,19 @@
 import pandas as pd
 import time
-from textblob import TextBlob
-from googletrans import Translator
-translator = Translator()
+import requests
 import string
 printable = set(string.printable)
 import os
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+
+#to translate
+def translate(text):
+    url_yandex ="https://translate.yandex.net/api/v1.5/tr.json/translate?key=%s&text=%s&lang=%s" % ('trnsl.1.1.20200520T162030Z.29cd21b722e23fe2.0ff29fc7f5319cdfb289962d1e0a956685f072fe',text,"en")
+    time.sleep(0.3)
+    response = requests.get(url_yandex, timeout=None)
+    response_data = eval(response.content.decode('utf-8'))
+    translation = response_data['text'][0]
+    return translation
 
 data = pd.read_csv('../../gen/data-preparation/temp/parsed-data.csv', sep = '\t')
 data.head()
@@ -50,18 +57,9 @@ for i, j in data.iterrows():
     data.loc[i, 'Sports'] = sports
 
     ## Translate voor sentiment Analysis
+    text=text.replace("#", " ")
     text_cleaned="".join(filter(lambda x: x in printable, text))
-    try:
-        text_en=translator.translate(text_cleaned, dest="en").text
-    except:
-        try:
-            text=TextBlob(text_cleaned)
-            text_en=text.translate(to='en').text
-        except:
-            data.loc[i, 'Negative'] = "NA"
-            data.loc[i, 'Neutral'] = "NA"
-            data.loc[i, 'Positive'] = "NA"
-            data.loc[i, 'Compound'] = "NA"
+    text_en=translate(text_cleaned)
 
     ## VADER
     analyser = SentimentIntensityAnalyzer()
