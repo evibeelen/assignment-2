@@ -1,28 +1,16 @@
 import pandas as pd
-import time
-import requests
-import string
-printable = set(string.printable)
+from textblob import TextBlob
 import os
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-
-#to translate
-def translate(text):
-    url_yandex ="https://translate.yandex.net/api/v1.5/tr.json/translate?key=%s&text=%s&lang=%s" % ('trnsl.1.1.20200520T162030Z.29cd21b722e23fe2.0ff29fc7f5319cdfb289962d1e0a956685f072fe',text,"en")
-    time.sleep(0.3)
-    response = requests.get(url_yandex, timeout=None)
-    response_data = eval(response.content.decode('utf-8'))
-    translation = response_data['text'][0]
-    return translation
 
 data = pd.read_csv('../../gen/data-preparation/temp/parsed-data.csv', sep = '\t')
 data.head()
 
-
+text_s=""
+x=0
 for i, j in data.iterrows():
     print(i)
     text=j['text']
-
     #subject indication
     school=False
     contact=False
@@ -57,17 +45,22 @@ for i, j in data.iterrows():
     data.loc[i, 'Sports'] = sports
 
     ## Translate voor sentiment Analysis
-    text=text.replace("#", " ")
-    text_cleaned="".join(filter(lambda x: x in printable, text))
-    text_en=translate(text_cleaned)
-
-    ## VADER
-    analyser = SentimentIntensityAnalyzer()
-    out = analyser.polarity_scores(text_en)
-    data.loc[i, 'Negative'] = out['neg']
-    data.loc[i, 'Neutral'] = out['neu']
-    data.loc[i, 'Positive'] = out['pos']
-    data.loc[i, 'Compound'] = out['compound']
+    text_s+=(text.replace("\n", " ")+"\n")
+    if x==50 or i==(len(data)-1):
+        dutch=TextBlob(text_s)
+        text_en=dutch.translate(from_lang="nl", to="en")
+        english=text_en.split("\n")
+        for tweet in english:
+            analyser = SentimentIntensityAnalyzer()
+            out = analyser.polarity_scores(tweet)
+            data.loc[(i-x), 'English'] = tweet
+            data.loc[(i-x), 'Negative'] = out['neg']
+            data.loc[(i-x), 'Neutral'] = out['neu']
+            data.loc[(i-x), 'Positive'] = out['pos']
+            data.loc[(i-x), 'Compound'] = out['compound']
+            x-=1
+        text_s=""
+    x+=1
 
 data.head()
 
