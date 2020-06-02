@@ -1,29 +1,21 @@
 ---
-title: "Analysis of Tweets per subject"
+title: "Polarity Analysis of Tweets per subject"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
+library(knitr)
 library(data.table)
 library(ggplot2)
+
 
 # read final data
 dt <- fread('../../gen/data-preparation/output/dataset.csv')
 ```
 
-## Some rudimentary analysis in Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button in RStudio,a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. 
-
-You can also **knit** the document from the command line, see the example in the `makefile`.
-
-
-
-### Number of tweets per subject
+### Determining the number of tweets per subject
 
 ```{r}
 Schools<-sum(dt$Schools, na.rm = TRUE)
@@ -34,124 +26,118 @@ Event<- sum(dt$Events, na.rm = TRUE)
 Soccer<- sum(dt$`Paid Soccer`, na.rm = TRUE)
 Sports<- sum(dt$Sports, na.rm = TRUE)
 
-df <- data.frame(Subject=c("Schools", "Contact-Based Professions", "Nursing Homes", "Hospitality", "Events", "Paid Soccer", "Sports"),
+subjects=c("Schools", "Contact-Based Professions", "Nursing Homes", "Hospitality", "Events", "Paid Soccer", "Sports")
+
+df <- data.frame(Subject=subjects,
                 Frequency=c(Schools, Contact, Nursing,Hospitality,Event, Soccer, Sports))
 
-print(df)
+kable(df, 
+      caption="Number of Tweets per Subject")
 ```
 
-### Graph of number of tweets per subject
+### Graphing of number of tweets per subject
 ```{r}
 
 
-ggplot(data=df, aes(x=Subject, y=Frequency)) +
-  geom_bar(stat="identity")
+ggplot(data=df, aes(x=Subject, y=Frequency, fill=subjects)) +
+  geom_bar(stat="identity")+ ggtitle("Number of Tweets per Subject")+
+  scale_fill_manual("legend", values = c("Schools"="pink", "Contact-Based Professions"="green", "Nursing Homes"= "red", "Hospitality"="purple", "Events"="yellow", "Paid Soccer"="orange", "Sports"="blue"))+
+   theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
 ```
 
-### Determining average sentiment per subject
+### Determining average polarity of tweets per subject
 ```{r}
-# calculating the average per subject and assigning to value to variable
-Neg.schools <- by(dt$Negative, dt$Schools, na.rm=TRUE, mean)
-neu.schools <- by(dt$Neutral, dt$Schools, na.rm=TRUE, mean)
-pos.schools <- by(dt$Positive, dt$Schools,na.rm=TRUE, mean)
-comp.schools <- by(dt$Compound, dt$Schools, na.rm=TRUE,mean)
-for (value in Neg.schools){Negative.Schools<-value}
-for (value in neu.schools){Neutral.Schools<-value}
-for (value in pos.schools){Postive.Schools<-value}
-for (value in comp.schools){Compound.Schools<-value}
+# calculating the average sentiment per subject and assigning to value to variable
+Negative.Schools <- unname((by(dt$Negative, dt$Schools, na.rm=TRUE, mean)["TRUE"]),force=FALSE)
+Neutral.Schools <- unname((by(dt$Neutral, dt$Schools, na.rm=TRUE, mean)["TRUE"]), force=FALSE)
+Positive.Schools <- unname((by(dt$Positive, dt$Schools,na.rm=TRUE, mean)["TRUE"]), force=FALSE)
+Compound.Schools <- unname((by(dt$Compound, dt$Schools, na.rm=TRUE,mean)["TRUE"]),force=FALSE)
 
-Neg.contact <- by(dt$Negative, dt$`Contact-Based Professions`,na.rm=TRUE, mean)
-neu.contact <- by(dt$Neutral, dt$`Contact-Based Professions`,na.rm=TRUE, mean)
-pos.contact <- by(dt$Positive, dt$`Contact-Based Professions`,na.rm=TRUE, mean)
-comp.contact <- by(dt$Compound, dt$`Contact-Based Professions`,na.rm=TRUE, mean)
-for (value in Neg.contact){Negative.contact<-value}
-for (value in neu.contact){Neutral.contact<-value}
-for (value in pos.contact){Postive.contact<-value}
-for (value in comp.contact){Compound.contact<-value}
+Negative.contact <- unname((by(dt$Negative, dt$`Contact-Based Professions`, na.rm=TRUE, mean)["TRUE"]),force=FALSE)
+Neutral.contact <- unname((by(dt$Neutral, dt$`Contact-Based Professions`, na.rm=TRUE, mean)["TRUE"]), force=FALSE)
+Positive.contact <- unname((by(dt$Positive, dt$`Contact-Based Professions`,na.rm=TRUE, mean)["TRUE"]), force=FALSE)
+Compound.contact <- unname((by(dt$Compound, dt$`Contact-Based Professions`, na.rm=TRUE,mean)["TRUE"]),force=FALSE)
 
-Neg.nursing <- by(dt$Negative, dt$`Nursing homes`,na.rm=TRUE, mean)
-neu.nursing <- by(dt$Neutral, dt$`Nursing homes`, na.rm=TRUE,mean)
-pos.nursing <- by(dt$Positive, dt$`Nursing homes`, na.rm=TRUE,mean)
-comp.nursing <- by(dt$Compound, dt$`Nursing homes`,na.rm=TRUE, mean)
-for (value in Neg.nursing){Negative.nursing<-value}
-for (value in neu.nursing){Neutral.nursing<-value}
-for (value in pos.nursing){Postive.nursing<-value}
-for (value in comp.nursing){Compound.nursing<-value}
+Negative.nursing <- unname((by(dt$Negative, dt$`Nursing homes`, na.rm=TRUE, mean)["TRUE"]),force=FALSE)
+Neutral.nursing <- unname((by(dt$Neutral, dt$`Nursing homes`, na.rm=TRUE, mean)["TRUE"]), force=FALSE)
+Positive.nursing <- unname((by(dt$Positive, dt$`Nursing homes`,na.rm=TRUE, mean)["TRUE"]), force=FALSE)
+Compound.nursing <- unname((by(dt$Compound, dt$`Nursing homes`, na.rm=TRUE,mean)["TRUE"]),force=FALSE)
 
-Neg.Hospitality <- by(dt$Negative, dt$Hospitality,na.rm=TRUE, mean)
-neu.Hospitality <- by(dt$Neutral, dt$Hospitality,na.rm=TRUE, mean)
-pos.Hospitality <- by(dt$Positive, dt$Hospitality,na.rm=TRUE, mean)
-comp.Hospitality <- by(dt$Compound, dt$Hospitality, na.rm=TRUE,mean)
-for (value in Neg.Hospitality){Negative.Hospitality<-value}
-for (value in neu.Hospitality){Neutral.Hospitality<-value}
-for (value in pos.Hospitality){Postive.Hospitality<-value}
-for (value in comp.Hospitality){Compound.Hospitality<-value}
+Negative.Hospitality <- unname((by(dt$Negative, dt$Hospitality, na.rm=TRUE, mean)["TRUE"]),force=FALSE)
+Neutral.Hospitality <- unname((by(dt$Neutral, dt$Hospitality, na.rm=TRUE, mean)["TRUE"]), force=FALSE)
+Positive.Hospitality <- unname((by(dt$Positive, dt$Hospitality,na.rm=TRUE, mean)["TRUE"]), force=FALSE)
+Compound.Hospitality <- unname((by(dt$Compound, dt$Hospitality, na.rm=TRUE,mean)["TRUE"]),force=FALSE)
 
-Neg.Event <- by(dt$Negative, dt$Events,na.rm=TRUE, mean)
-neu.Event <- by(dt$Neutral, dt$Events,na.rm=TRUE, mean)
-pos.Event <- by(dt$Positive, dt$Events,na.rm=TRUE, mean)
-comp.Event <- by(dt$Compound, dt$Events,na.rm=TRUE, mean)
-for (value in Neg.Event){Negative.Event<-value}
-for (value in neu.Event){Neutral.Event<-value}
-for (value in pos.Event){Postive.Event<-value}
-for (value in comp.Event){Compound.Event<-value}
+Negative.Event <- unname((by(dt$Negative, dt$Events, na.rm=TRUE, mean)["TRUE"]),force=FALSE)
+Neutral.Event <- unname((by(dt$Neutral, dt$Events, na.rm=TRUE, mean)["TRUE"]), force=FALSE)
+Positive.Event <- unname((by(dt$Positive, dt$Events,na.rm=TRUE, mean)["TRUE"]), force=FALSE)
+Compound.Event <- unname((by(dt$Compound, dt$Events, na.rm=TRUE,mean)["TRUE"]),force=FALSE)
 
-Neg.soccer <- by(dt$Negative, dt$`Paid Soccer`,na.rm=TRUE, mean)
-neu.soccer <- by(dt$Neutral, dt$`Paid Soccer`,na.rm=TRUE, mean)
-pos.soccer <- by(dt$Positive, dt$`Paid Soccer`, na.rm=TRUE,mean)
-comp.soccer <- by(dt$Compound, dt$`Paid Soccer`, na.rm=TRUE,mean)
-for (value in Neg.soccer){Negative.soccer<-value}
-for (value in neu.soccer){Neutral.soccer<-value}
-for (value in pos.soccer){Postive.soccer<-value}
-for (value in comp.soccer){Compound.soccer<-value}
+Negative.soccer <- unname((by(dt$Negative, dt$`Paid Soccer`, na.rm=TRUE, mean)["TRUE"]),force=FALSE)
+Neutral.soccer <- unname((by(dt$Neutral, dt$`Paid Soccer`, na.rm=TRUE, mean)["TRUE"]), force=FALSE)
+Positive.soccer <- unname((by(dt$Positive, dt$`Paid Soccer`,na.rm=TRUE, mean)["TRUE"]), force=FALSE)
+Compound.soccer <- unname((by(dt$Compound, dt$`Paid Soccer`, na.rm=TRUE,mean)["TRUE"]),force=FALSE)
 
-
-Neg.sport <- by(dt$Negative, dt$Sports,na.rm=TRUE, mean)
-neu.sport <- by(dt$Neutral, dt$Sports, na.rm=TRUE,mean)
-pos.sport <- by(dt$Positive, dt$Sports, na.rm=TRUE,mean)
-comp.sport <- by(dt$Compound, dt$Sports, na.rm=TRUE,mean)
-for (value in Neg.sport){Negative.sport<-value}
-for (value in neu.sport){Neutral.sport<-value}
-for (value in pos.sport){Postive.sport<-value}
-for (value in comp.sport){Compound.sport<-value}
+Negative.sport <- unname((by(dt$Negative, dt$Sports, na.rm=TRUE, mean)["TRUE"]),force=FALSE)
+Neutral.sport <- unname((by(dt$Neutral, dt$Sports, na.rm=TRUE, mean)["TRUE"]), force=FALSE)
+Positive.sport <- unname((by(dt$Positive, dt$Sports,na.rm=TRUE, mean)["TRUE"]), force=FALSE)
+Compound.sport <- unname((by(dt$Compound, dt$Sports, na.rm=TRUE,mean)["TRUE"]),force=FALSE)
 
 
 #creating data frames for each sentiment component
 
-Negative<-data.frame(Subject=c("Schools", "Contact-Based Professions", "Nursing Homes", "Hospitality", "Events", "Paid Soccer", "Sports"),
+Negative<-data.frame(Subject=subjects,
                 Negativity=c(Negative.Schools, Negative.contact, Negative.nursing,Negative.Hospitality,Negative.Event, Negative.soccer, Negative.sport))
 
-print(Negative)
+kable(Negative, 
+      caption="Average Proportion of Negativity in Tweets per Subject")
 
-Positive<-data.frame(Subject=c("Schools", "Contact-Based Professions", "Nursing Homes", "Hospitality", "Events", "Paid Soccer", "Sports"),
-                Positivity=c(Postive.Schools, Postive.contact, Postive.nursing,Postive.Hospitality,Postive.Event, Postive.soccer, Postive.sport))
+Positive<-data.frame(Subject=subjects,
+                Positivity=c(Positive.Schools, Positive.contact, Positive.nursing,Positive.Hospitality,Positive.Event, Positive.soccer, Positive.sport))
 
-print(Positive)
+kable(Positive, 
+      caption="Average Proportion of Positivity in Tweets per Subject")
 
-Neutral<-data.frame(Subject=c("Schools", "Contact-Based Professions", "Nursing Homes", "Hospitality", "Events", "Paid Soccer", "Sports"),
+Neutral<-data.frame(Subject=subjects,
                 Neutrality=c(Neutral.Schools, Neutral.contact, Neutral.nursing,Neutral.Hospitality,Neutral.Event, Neutral.soccer, Neutral.sport))
 
-print(Neutral)
+kable(Neutral, 
+      caption="Average Proportion of Neutrality in Tweets per Subject")
 
-Compound<-data.frame(Subject=c("Schools", "Contact-Based Professions", "Nursing Homes", "Hospitality", "Events", "Paid Soccer", "Sports"),
+Compound<-data.frame(Subject=subjects,
                 Compound=c(Compound.Schools, Compound.contact, Compound.nursing,Compound.Hospitality,Compound.Event, Compound.soccer, Compound.sport))
 
-print(Compound)
+kable(Compound, 
+      caption="Average Compound score of Tweets per Subject")
 ```
 
-### Graphing sentiment per subject
+
+### Graphing the Average Polarity of Tweets per subject
 ```{r}
-# Overlaid histograms
+# Hisotgram per Polarity element
 
-ggplot(data=Negative, aes(x=Subject, y=Negativity)) +
-  geom_bar(stat="identity")
+ggplot(data=Negative, aes(x=Subject, y=Negativity, fill=subjects)) +
+  geom_bar(stat="identity")+ ggtitle("Average Proportion of Negativity in Tweets per Subject")+
+  scale_fill_manual("legend", values = c("Schools"="pink", "Contact-Based Professions"="green", "Nursing Homes"= "red", "Hospitality"="purple", "Events"="yellow", "Paid Soccer"="orange", "Sports"="blue"))+
+   theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
 
-ggplot(data=Positive, aes(x=Subject, y=Positivity)) +
-  geom_bar(stat="identity")
+ggplot(data=Positive, aes(x=Subject, y=Positivity, fill=subjects)) +
+  geom_bar(stat="identity")+ ggtitle("Average Proportion of Positivity in Tweets per Subject")+
+  scale_fill_manual("legend", values = c("Schools"="pink", "Contact-Based Professions"="green", "Nursing Homes"= "red", "Hospitality"="purple", "Events"="yellow", "Paid Soccer"="orange", "Sports"="blue"))+
+   theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
 
-ggplot(data=Neutral, aes(x=Subject, y=Neutrality)) +
-  geom_bar(stat="identity")
+ggplot(data=Neutral, aes(x=Subject, y=Neutrality, fill=subjects)) +
+  geom_bar(stat="identity")+ ggtitle("Average Proportion of Negativity in Tweets per Subject")+
+  scale_fill_manual("legend", values = c("Schools"="pink", "Contact-Based Professions"="green", "Nursing Homes"= "red", "Hospitality"="purple", "Events"="yellow", "Paid Soccer"="orange", "Sports"="blue"))+
+   theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
 
-ggplot(data=Compound, aes(x=Subject, y=Compound)) +
-  geom_bar(stat="identity")
+ggplot(data=Compound, aes(x=Subject, y=Compound, fill=subjects)) +
+  geom_bar(stat="identity")+ ggtitle("Average Compound score of Tweets per Subject")+
+  scale_fill_manual("legend", values = c("Schools"="pink", "Contact-Based Professions"="green", "Nursing Homes"= "red", "Hospitality"="purple", "Events"="yellow", "Paid Soccer"="orange", "Sports"="blue"))+
+   theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
 ```
