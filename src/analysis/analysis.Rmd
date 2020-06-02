@@ -130,7 +130,7 @@ ggplot(data=Positive, aes(x=Subject, y=Positivity, fill=subjects)) +
         axis.ticks.x=element_blank())
 
 ggplot(data=Neutral, aes(x=Subject, y=Neutrality, fill=subjects)) +
-  geom_bar(stat="identity")+ ggtitle("Average Proportion of Negativity in Tweets per Subject")+
+  geom_bar(stat="identity")+ ggtitle("Average Proportion of Neutrality in Tweets per Subject")+
   scale_fill_manual("Legend", values = c("Schools"="pink", "Contact-Based Professions"="green", "Nursing Homes"= "red", "Hospitality"="purple", "Events"="yellow", "Paid Soccer"="orange", "Sports"="blue"))+
    theme(axis.text.x=element_blank(),
         axis.ticks.x=element_blank())
