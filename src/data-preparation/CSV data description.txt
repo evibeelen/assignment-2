@@ -1,0 +1,90 @@
+==========================================================
+  C S V  D A T A  D E S C R I P T I O N
+==========================================================
+
+After parsing, datamining, and wrangling the data, the following variables are
+identified.
+
+  - Column A: id
+	Unique id number of the tweet.
+
+  - Column B: created_at
+	When the tweet was created. Includes: day of the week, date (month, day), 
+	timestamp (hour:minutes:seconds), timezone, and year.
+
+  - Column C: text
+	Content of the tweet. 
+
+The following seven variables are categories to which each tweet is allocated 
+(TRUE/FALSE) based on target words.
+
+  - Column D: Schools
+	Tweets that provide content about the measurements taken by the Dutch 
+	government concerning education.
+	The tweets are data mined based on the following target words: 'school',
+	'onderwijs', 'scholen'.
+
+  - Column E: Contact-Based Professions
+	Tweets that provide content about the measurements taken by the Dutch 
+	government concerning contact-based proffesions.
+	The tweets are data mined based on the following target words: 'kapper',
+	'contactberoep'.
+
+  - Column F: Nursing homes
+	Tweets that provide content about the measurements taken by the Dutch 
+	government concerning nursing homes and rehabilitation.
+	The tweets are data mined based on the following target words: 'verpleeghuis',
+	'verpleeghuizen'.
+
+  - Column G: Hospitality
+	Tweets that provide content about the measurements taken by the Dutch 
+	government concerning hospitality and the catering industry.
+	The tweets are data mined based on the following target words: 'horeca',
+	'restaurant', 'terras', 'kroeg', ' bar '.
+
+  - Column H: Events
+	Tweets that provide content about the measurements taken by the Dutch 
+	government concerning public events in the Netherlands.
+	The tweets are data mined based on the following target words: 'evenement',
+	'festival'.
+
+  - Column I: Paid Soccer
+	Tweets that provide content about the measurements taken by the Dutch 
+	government concerning paid soccer.
+	The tweets are data mined based on the following target words: 'betaald
+	voetbal', 'eredivisie', 'knvb'.
+
+  - Column J: Sports
+	Tweets that provide content about the measurements taken by the Dutch 
+	government concerning sports.
+	The tweets are data mined based on the following target words: 'sporten',
+	'sportclub'.
+
+All selected tweets were translated to English in order to perform a sentiment analysis.
+The following variable could be used to assess the quality of both the translation
+and the sentiment analysis.  
+
+  - Column K: English
+	Content of the tweet translated from Dutch to English using TextBlob.	
+
+The following four variables are sentiment scores calculated using VADER. VADER
+is a lexicon and rule-based sentiment analysis tool
+specifically adjusted to sentiments expressed through social media platforms.
+Scores of columns K, L, and M are cumulatively equal to 1.
+
+  - Column L: Negative
+	A score (between 0 and 1) that represents the proportion of the attached text
+	that is labeled as negative
+
+  - Column M: Neutral
+	A score (between 0 and 1) that represents the proportion of the attached text
+	that is labeled as neutral
+
+  - Column N: Positive
+	A score (between 0 and 1) that represents the proportion of the attached text
+	that is labeled as positive
+
+  - Column N: Compound
+	Calculation of the sum of all the lexicon ratings after being normalized.
+	A compound score of -1 is the most extreme negative outcome and 1 is the most
+	extreme positive outcome.
