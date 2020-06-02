@@ -5,11 +5,11 @@
 
 analyze: ../../gen/analysis/output/analysis.html
 
-../../gen/analysis/temp/preclean.csv: preclean.R ../../gen/data-preparation/output/dataset.csv
-	R --vanilla --args "" < "preclean.R"
+../../gen/analysis/output: create_dir.R ../../gen/data-preparation/output/dataset.csv
+	R --vanilla --args "" < "create_dir.R"
 
 
-../../gen/analysis/output/analysis.html: analysis.Rmd ../../gen/analysis/temp/preclean.csv
+../../gen/analysis/output/analysis.html: analysis.Rmd ../../gen/analysis/output
 	R -e "rmarkdown::render('analysis.Rmd', output_file = '../../gen/analysis/output/analysis.html')"
 
 wipe:
