@@ -13,8 +13,7 @@ identified.
 	timestamp (hour:minutes:seconds), timezone, and year.
 
   - Column C: text
-	Content of the tweet. Unknown characters are deleted during the datamining
-	process.
+	Content of the tweet. 
 
 The following seven variables are categories to which each tweet is allocated 
 (TRUE/FALSE) based on target words.
