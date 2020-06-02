@@ -61,9 +61,9 @@ The following seven variables are categories to which each tweet is allocated
 	The tweets are data mined based on the following target words: 'sporten',
 	'sportclub'.
 
-All selected tweets were translated to English in order to perform VADER analysis.
+All selected tweets were translated to English in order to perform a sentiment analysis.
 The following variable could be used to assess the quality of both the translation
-and the VADER analysis.  
+and the sentiment analysis.  
 
   - Column K: English
 	Content of the tweet translated from Dutch to English using TextBlob.	
