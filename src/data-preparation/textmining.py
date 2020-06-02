@@ -1,6 +1,7 @@
 import pandas as pd
 from textblob import TextBlob
 import os
+import shutil
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 data = pd.read_csv('../../gen/data-preparation/temp/parsed-data.csv', sep = '\t')
@@ -68,9 +69,6 @@ os.makedirs('../../gen/data-preparation/output/', exist_ok=True)
 
 data.to_csv('../../gen/data-preparation/output/dataset.csv', index = False)
 
+shutil.move('../../src/data-preparation/Data_description.txt', "../../gen/data-preparation/output/")
+
 print('done!')
-
-
-data.to_csv('../../gen/data-preparation/output/dataset.csv', index = False)
-
-print('done.')
